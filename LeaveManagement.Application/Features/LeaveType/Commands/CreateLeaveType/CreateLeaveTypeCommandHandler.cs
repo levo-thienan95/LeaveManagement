@@ -1,4 +1,5 @@
 using AutoMapper;
+using LeaveManagement.Application.Contracts.Logging;
 using LeaveManagement.Application.Contracts.Persistence;
 using LeaveManagement.Application.Exceptions;
 using MediatR;
@@ -9,10 +10,12 @@ public class CreateLeaveTypeCommandHandler: IRequestHandler<CreateLeaveTypeComma
 {
     private readonly ILeaveTypeRepository _leaveTypeRepository;
     private readonly IMapper _mapper;
-    public CreateLeaveTypeCommandHandler(ILeaveTypeRepository leaveTypeRepository, IMapper mapper)
+    private readonly IAppLogger<CreateLeaveTypeCommandHandler> _logger;
+    public CreateLeaveTypeCommandHandler(ILeaveTypeRepository leaveTypeRepository, IMapper mapper, IAppLogger<CreateLeaveTypeCommandHandler> logger)
     {
         _leaveTypeRepository = leaveTypeRepository;
         _mapper = mapper;
+        _logger = logger;
     }   
     public async Task<int> Handle(CreateLeaveTypeCommand request, CancellationToken cancellationToken)
     {
@@ -26,7 +29,7 @@ public class CreateLeaveTypeCommandHandler: IRequestHandler<CreateLeaveTypeComma
         var leaveToCreate = _mapper.Map<Domain.LeaveType>(request);
         
         await _leaveTypeRepository.CreateAsync(leaveToCreate);
-        
+        _logger.LogInformation($"Created leave type: {leaveToCreate.Id}");
         return leaveToCreate.Id;
     }
 }

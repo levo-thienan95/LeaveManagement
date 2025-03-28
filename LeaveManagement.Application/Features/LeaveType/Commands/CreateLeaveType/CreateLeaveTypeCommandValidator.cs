@@ -16,10 +16,18 @@ public class CreateLeaveTypeCommandValidator:AbstractValidator<CreateLeaveTypeCo
         RuleFor(x => x.DefaultDays).GreaterThan(0).WithMessage("{PropertyName} must be greater than zero");
         
         RuleFor(q => q).MustAsync(LeaveTypeNameUnique).WithMessage("{PropertyName} must be unique");
+        
+        RuleFor(q => q.Id).MustAsync(LeaveTypeMustExist).WithMessage("{PropertyName} must be exist");
     }
 
     private Task<bool> LeaveTypeNameUnique(CreateLeaveTypeCommand request, CancellationToken token)
     {
         return _leaveTypeRepository.LeaveTypeNameUnique(request.Name);
+    }
+
+    private async Task<bool> LeaveTypeMustExist(int id, CancellationToken token)
+    {
+        var leaveType = await _leaveTypeRepository.GetByIdAsync(id);
+        return leaveType != null;
     }
 }

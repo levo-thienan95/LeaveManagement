@@ -1,6 +1,8 @@
+using LeaveManagement.Domain.Common;
+
 namespace LeaveManagement.Domain;
 
-public class LeaveAllocation
+public class LeaveAllocation:BaseEntity
 {
     public int Id { get; set; }
     
@@ -11,4 +13,6 @@ public class LeaveAllocation
     public int LeaveTypeId { get; set; }
     
     public int Period { get; set; }
+    
+    public int EmployeedId { get; set; }
 }

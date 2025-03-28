@@ -10,7 +10,6 @@ public static class ApplicationServiceRegistration
     {
         services.AddAutoMapper(System.Reflection.Assembly.GetExecutingAssembly());
         services.AddMediatR(Assembly.GetExecutingAssembly());
-        
         return services;
     }
 }
